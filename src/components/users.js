@@ -1,20 +1,29 @@
 import React, { useState, useEffect } from 'react'
 import data from '../data.json'
+import axios from 'axios'
 
-export default  function Users() {
+
+function handleClick(list) {
+    
+}
+
+export default function Users() {
 
     const [departements, setDepartements] = useState([])
+    const dataUsers = data.map((users) => {
+        return {...users, departments: users.departments.filter((dep) => dep === departements.map((departement) => departement.code))}
+    })
 
     useEffect(() => {
-        fetch('https://geo.api.gouv.fr/departements')
-        .then((res) => res.json())
-        .then((data) => setDepartements(...departements, data))
+        const fetchData = async () => {
+            const result = await axios('https://geo.api.gouv.fr/departements')
+            setDepartements(...departements, result.data)
+        }
+        fetchData()
     }, [])
-
-    const userDepartmentCode = data.map(users => users.departments)
-    const filteredDepartments = departements.map((department) => department.code)
-    console.log(userDepartmentCode.includes(filteredDepartments))
     
+    console.log(dataUsers)
+
     return (
         <div>
             <ul>
@@ -23,6 +32,7 @@ export default  function Users() {
                 )}
             </ul>
             <select>
+                    
             </select>
         </div>
     )
